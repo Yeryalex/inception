@@ -1,28 +1,54 @@
-#services:
-#  nginx-server:
-#    build: ./requirements/nginx
-#    image: nginx-server
-#    container_name: nginx
-#    ports:
-#      - "8080:443"
-
 services:
-  nginx:
-    build: ./requirements/nginx
-    image: nginx
-    container_name: nginx
-    ports:
-      - "8080:443"
+  mariadb:
+    build: 
+      context: ./requirements/mariadb # This tells Docker to look inside mariadb/
+      dockerfile: Dockerfile
+    container_name: mariadb
+    image: mariadb-img
+    restart: always
+    env_file:
+      - .env
     volumes:
-      - wp_data:/var/www/html # Shared folder
-    depends_on:
-      - wordpress
+      - db_data:/var/lib/mysql
+    networks:
+      - inception_network
 
   wordpress:
-    build: ./requirements/wordpress
+    build: 
+      context: ./requirements/wordpress # This tells Docker to look inside wordpress/
+      dockerfile: Dockerfile
     container_name: wordpress
+    image: wordpress-img
+    restart: always
+    env_file:
+      - .env
     volumes:
-      - wp_data:/var/www/html # Shared folder
+      - wp_data:/var/www/html
+    depends_on:
+      - mariadb
+    networks:
+      - inception_network
+
+  nginx:
+    build: 
+      context: ./requirements/nginx # This tells Docker to look inside nginx/
+      dockerfile: Dockerfile
+    container_name: nginx
+    image: nginx-img
+    restart: always
+    ports:
+      - "443:443"
+    volumes:
+      - wp_data:/var/www/html
+    depends_on:
+      - wordpress
+    networks:
+      - inception_network
 
 volumes:
-  wp_data: # This creates the shared space
+  wp_data:
+  db_data:
+
+networks:
+  inception_network:
+    driver: bridge
