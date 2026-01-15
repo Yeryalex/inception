@@ -37,5 +37,11 @@ if [ ! -f /var/www/html/wp-config.php ]; then
     echo "WordPress installation finished!"
 fi
 
+mkdir -p /var/www/html/wp-content/uploads
+
+chown -R www-data:www-data /var/www/html/wp-content/uploads
+
+chmod -R 775 /var/www/html/wp-content/uploads
+
 # 3. Hand over to the CMD (php-fpm8.2 -F)
 exec "$@"
