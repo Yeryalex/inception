@@ -7,7 +7,7 @@
 ## 📖 Description
 The **Inception** project is a journey into System Administration through virtualization. The goal is to set up a small infrastructure composed of different services (**Nginx**, **WordPress**, and **MariaDB**) using **Docker Compose**.
 
-Every service runs in its own dedicated container. This project emphasizes the "manual" approach: instead of using ready-made images from Docker Hub, we build our own images using **Debian 12-slim** as the base, ensuring a deep understanding of containerization and service orchestration.
+Every service runs in its own dedicated container. This project emphasizes the "manual" approach: instead of using ready-made images from Docker Hub, I build my own images using **Debian 12-slim** as the base, ensuring a deep understanding of containerization and service orchestration.
 
 ---
 
@@ -56,7 +56,7 @@ This infrastructure is designed for security and modularity:
 
 2.  **Build and Start:**
     ```bash
-    > It is important to notice that this project uses "secrets/\*.txt" and ".env" files avoiding security disruption when running the application.
+    > It is important to notice that this project uses "secrets/*.txt" and ".env" files avoiding security disruption when running the application.
     > You must define your secrets passwords and the srcs/.env to complete the execution of make.
     
     Now write "make" in the CLI and press enter.
