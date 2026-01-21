@@ -7,8 +7,6 @@ all: build
 build:
 	@sudo mkdir -p /home/yrodrigu/data/wordpress
 	@sudo mkdir -p /home/yrodrigu/data/mariadb
-	@sudo chmod 777 /home/yrodrigu/data/wordpress
-	@sudo chmod 777 /home/yrodrigu/data/mariadb
 	@$(COMPOSE) up -d --build
 
 stop:
