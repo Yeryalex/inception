@@ -22,7 +22,7 @@ Project management is handled via the **Makefile** in the root directory to ensu
 To build the custom images and launch all containers, run:
 ```bash
 make
-
+```
 This will automatically prepare your local data folders, build the images based on Debian 12, and start the services.
 How to Stop
 
@@ -30,6 +30,9 @@ To shut down the services without losing your database or website files, run:
 Bash
 
 make down
+
+
+---
 
 ## 🌐 3. Accessing the System
 
@@ -39,6 +42,8 @@ Public Website	https://yrodrigu.42.fr	View the live site as a visitor.
 Admin Panel	https://yrodrigu.42.fr/wp-admin	Log in to manage content and settings.
 
     Important: You must map the domain by adding 127.0.0.1 yrodrigu.42.fr to your /etc/hosts file.
+
+---
 
 ## 🔐 4. Locating and Managing Credentials
 
@@ -50,28 +55,31 @@ Passwords and sensitive configurations are managed through Environment Variables
 
     Access: For security, the MariaDB database is only accessible from within the internal Docker network. External tools cannot connect to it directly.
 
+
+---
+
 ## 🔍 5. Checking Service Health
 
 To ensure the infrastructure is healthy, administrators can perform the following checks:
 Check Container Status
 
 Verify that all services are active:
-Bash
+```Bash
 
 docker ps
-
+```
 Expected Result: You should see three containers running (nginx, wordpress, mariadb).
 Inspect Logs
 
 If you encounter a connection error, check the logs of the relevant container:
-Bash
+```Bash
 
 docker logs wordpress
 docker logs mariadb
-
+```
 Verify Network
 
 Ensure the containers are connected to the isolated bridge:
-Bash
+```Bash
 
 docker network ls
