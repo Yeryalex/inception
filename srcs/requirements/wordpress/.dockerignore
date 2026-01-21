@@ -1,0 +1,8 @@
+# Excluded  files
+.git
+.gitignore
+wp-config-sample.php
+.env
+data/
+*.log
+.DS_Store
