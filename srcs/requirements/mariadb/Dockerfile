@@ -18,6 +18,8 @@ RUN chmod +x /usr/local/bin/setup.sh
 # Expose the default MariaDB port
 EXPOSE 3306
 
+RUN rm -rf /var/lib/mysql/*
+
 # Start with our setup script
 ENTRYPOINT ["/usr/local/bin/setup.sh"]
 

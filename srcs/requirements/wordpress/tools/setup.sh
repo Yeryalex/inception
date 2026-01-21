@@ -1,34 +1,34 @@
 #!/bin/bash
 set -e
 
-# 1. Read secrets into variables
+# 1. Variables from secrets
 MYSQL_PASSWORD=$(cat /run/secrets/db_password)
 WP_ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password)
 WP_USER_PASSWORD=$(cat /run/secrets/wp_user_password)
 
-# 2. Wait for MariaDB to be ready
+# 2. WAIT for MariaDB (Crucial)
+# Use nc to make sure the port is actually open
 echo "WordPress: Waiting for MariaDB..."
-while ! mariadb-admin ping -h"mariadb" --silent; do
-    sleep 1
+while ! (echo > /dev/tcp/mariadb/3306) 2>/dev/null; do
+    sleep 2
 done
 
-# 3. Installation logic
-if [ ! -f /var/www/html/wp-config.php ]; then
-    echo "WordPress: Core files not found. Starting installation..."
-
-    # MANDATORY: Download the WordPress source code first
+# 3. CHECK if WordPress is already there
+# Only download if wp-settings.php (a core file) is missing
+if [ ! -f "/var/www/html/wp-settings.php" ]; then
+    echo "WordPress: Empty volume detected. Downloading core..."
     wp core download --path='/var/www/html' --allow-root
-
-    # Create wp-config.php using the DB secrets
+    
+    # Create config
     wp config create \
         --dbname=$MYSQL_DATABASE \
         --dbuser=$MYSQL_USER \
         --dbpass=$MYSQL_PASSWORD \
         --dbhost=mariadb:3306 \
-        --path='/var/www/html' \
         --allow-root
-
-    # Run the installation
+        #--path='/var/www/html' \
+        
+    # Install
     wp core install \
         --url=$DOMAIN_NAME \
         --title="Inception" \
@@ -38,21 +38,13 @@ if [ ! -f /var/www/html/wp-config.php ]; then
         --path='/var/www/html' \
         --allow-root
 
-    # Create the second user (Author)
-    wp user create \
-        $WP_USER $WP_USER_EMAIL \
-        --user_pass=$WP_USER_PASSWORD \
-        --role=author \
-        --path='/var/www/html' \
-        --allow-root
-
-    echo "WordPress: Setup finished!"
+    wp user create $WP_USER $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD --role=author --path='/var/www/html' --allow-root
 else
-    echo "WordPress: Already installed, skipping to start PHP-FPM."
+    echo "WordPress: Files detected. Skipping download."
 fi
 
-# 4. Final permissions fix to allow Nginx to read the files
+# 4. FINAL PERMISSIONS
+# This ensures Nginx can read what WordPress wrote
 chown -R www-data:www-data /var/www/html
 
-# 5. Hand over to CMD (php-fpm8.2 -F)
 exec "$@"

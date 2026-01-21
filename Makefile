@@ -5,8 +5,10 @@ COMPOSE = docker compose -f srcs/docker-compose.yml
 all: build
 
 build:
-	@mkdir -p /home/yrodrigu/data/wordpress
-	@mkdir -p /home/yrodrigu/data/mariadb
+	@sudo mkdir -p /home/yrodrigu/data/wordpress
+	@sudo mkdir -p /home/yrodrigu/data/mariadb
+	@sudo chmod 777 /home/yrodrigu/data/wordpress
+	@sudo chmod 777 /home/yrodrigu/data/mariadb
 	@$(COMPOSE) up -d --build
 
 stop:
