@@ -18,6 +18,8 @@ WORKDIR /var/www/html
 
 COPY ./tools/setup.sh /usr/local/bin/setup.sh
 
+EXPOSE 9000
+
 RUN chmod +x /usr/local/bin/setup.sh
 
 ENTRYPOINT ["/usr/local/bin/setup.sh"]

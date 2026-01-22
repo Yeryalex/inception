@@ -20,7 +20,6 @@ if [ ! -f "/var/www/html/wp-settings.php" ]; then
         --dbpass=$MYSQL_PASSWORD \
         --dbhost=mariadb:3306 \
         --allow-root
-       # --path='/var/www/html' \
         
     wp core install \
         --url=$DOMAIN_NAME \
